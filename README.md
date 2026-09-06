@@ -2,7 +2,9 @@
 
 Daily Urdu Wordle — five letters, five guesses, custom Urdu keyboard.
 
-Play (GitHub Pages): https://abdulazizsapra.github.io/lafz/
+Play: https://www.abdulaziz.au/lafz/
+
+GitHub: https://github.com/abdulazizsapra/lafz
 
 ## Web
 

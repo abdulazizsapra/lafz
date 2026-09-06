@@ -37,6 +37,6 @@ Urdu Wordle game (Flutter). Single daily puzzle, 5 attempts, 5x5 grid, custom Ur
 - [ ] Fix persistence properly: save guess units as JSON, restore guesses+evaluations in `loadSavedGame` (replaces clamp workaround).
 - [ ] Remove unused import (`game_engine.dart`) and unused `screenWidth`; guard `context` after `await` in `_openStats`.
 - [x] Replace mock puzzle with real daily-puzzle loading (bundled list).
-- [ ] Push `lafz` to GitHub and enable Pages (source: GitHub Actions) once `gh` auth works.
+- [x] Repo https://github.com/abdulazizsapra/lafz pushed; Pages source = GitHub Actions. Public URL: https://www.abdulaziz.au/lafz/ (profile custom domain).
 - [ ] Confirm game-over/keyboard layout + tile colors on device.
 - [ ] Release build (`flutter build ios --release`) when ready for TestFlight.

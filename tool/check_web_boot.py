@@ -1,30 +1,28 @@
 #!/usr/bin/env python3
-"""Fail if the built web bundle can stick on the HTML splash.
-
-The 1.1.0 live page registered Flutter's deprecated service worker
-(which unregisters itself and reloads the tab) and never hid #lafz-boot.
-"""
+"""Fail if the built web bundle can stick on a loading splash."""
 
 from pathlib import Path
 import sys
 
 root = Path(__file__).resolve().parents[1]
 html = (root / "build" / "web" / "index.html").read_text(encoding="utf-8")
+sw = (root / "build" / "web" / "flutter_service_worker.js").read_text(encoding="utf-8")
 
 errors: list[str] = []
 if "{{flutter" in html:
     errors.append("Flutter template tokens were not replaced")
 if "flutter_bootstrap.js" in html:
-    errors.append("index.html still loads flutter_bootstrap.js (registers SW)")
-# flutter.js mentions the option name; only fail if we actually pass it.
+    errors.append("index.html still loads flutter_bootstrap.js")
+if "لوڈ ہو رہا ہے" in html:
+    errors.append("HTML still shows a loading splash")
+if "کھیلیں" not in html:
+    errors.append("HTML landing is missing the Play button")
 if "serviceWorkerSettings:" in html.split("_flutter.loader.load")[-1][:800]:
     errors.append("loader.load still passes serviceWorkerSettings")
-if "lafz-boot" not in html:
-    errors.append("splash #lafz-boot is missing")
-if "getElementById('lafz-boot')" not in html and 'getElementById("lafz-boot")' not in html:
-    errors.append("splash is never removed when Flutter starts")
 if '"useLocalCanvasKit":true' not in html:
     errors.append("CanvasKit is not pinned to the same origin")
+if "client.navigate" in sw:
+    errors.append("service worker still reloads clients")
 
 if errors:
     print("RED — web boot is unsafe:")
@@ -32,4 +30,4 @@ if errors:
         print(f"  - {e}")
     sys.exit(1)
 
-print("GREEN — no service worker, splash is removed when the engine starts")
+print("GREEN — landing is HTML, no loading splash, SW will not reload")

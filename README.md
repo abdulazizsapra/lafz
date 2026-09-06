@@ -6,7 +6,7 @@ Play: https://www.abdulaziz.au/lafz/
 
 GitHub: https://github.com/abdulazizsapra/lafz
 
-Current release: **1.1.1** — see [CHANGELOG.md](CHANGELOG.md).
+Current release: **1.1.2** — see [CHANGELOG.md](CHANGELOG.md).
 
 ## Web
 

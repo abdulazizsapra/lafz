@@ -5,6 +5,14 @@ All notable changes to لفظ are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and version numbers follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.2] — 2026-09-06
+
+### Fixed
+- First paint is the landing page (کھیلیں), not “لوڈ ہو رہا ہے…”.
+- Flutter prefs read can no longer leave a spinner up; service worker no longer reloads the tab.
+
+[1.1.2]: https://github.com/abdulazizsapra/lafz/releases/tag/v1.1.2
+
 ## [1.1.1] — 2026-09-06
 
 ### Fixed

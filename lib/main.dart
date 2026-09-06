@@ -7,16 +7,29 @@ import 'features/game/presentation/game_screen.dart';
 import 'features/onboarding/presentation/onboarding_screen.dart';
 import 'shared/widgets/play_window.dart';
 
-Future<bool> _seenOnboarding() async {
-  return await LafzKv.getBool('lafz_onboarding_seen') ?? false;
+Future<bool> seenOnboarding() async {
+  try {
+    return await LafzKv.getBool('lafz_onboarding_seen')
+            .timeout(const Duration(seconds: 2), onTimeout: () => false) ??
+        false;
+  } catch (_) {
+    return false;
+  }
 }
 
 void main() {
   runApp(const LafzApp());
 }
 
-class LafzApp extends StatelessWidget {
+class LafzApp extends StatefulWidget {
   const LafzApp({super.key});
+
+  @override
+  State<LafzApp> createState() => _LafzAppState();
+}
+
+class _LafzAppState extends State<LafzApp> {
+  late final Future<bool> _onboarding = seenOnboarding();
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +51,12 @@ class LafzApp extends StatelessWidget {
       ],
       builder: (context, child) => PlayWindow(child: child ?? const SizedBox.shrink()),
       home: FutureBuilder<bool>(
-        future: _seenOnboarding(),
+        future: _onboarding,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          return snapshot.data! ? const GameScreen() : const OnboardingScreen();
+          // Prefer the landing over a spinner so a slow cookie/prefs read
+          // cannot look like a stuck load screen.
+          if (snapshot.data == true) return const GameScreen();
+          return const OnboardingScreen();
         },
       ),
     );

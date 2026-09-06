@@ -39,7 +39,7 @@ Urdu Wordle game (Flutter). Single daily puzzle, 5 attempts, 5x5 grid, custom Ur
 - Killed stale duplicate `flutter run` sessions (old 12:26 + stuck 12:32) that blocked reinstall.
 
 - 2026-09-06: Wordle-like UI — flat 500px play window (no phone frame), `WordleHeader`, square 0-radius tiles, Wordle green/yellow/gray + gray keyboard, light theme, landing page (`#E3E3E3`, 3×3 logo, black **کھیلیں** pill). Game stays 5×5. Verified locally at http://127.0.0.1:8081/lafz/.
-- 2026-09-06: Release **1.1.1+3** — live site stuck on HTML splash. Cause: `flutter_bootstrap.js` registered Flutter’s deprecated SW (unregister + `client.navigate` reload) and `#lafz-boot` was never removed. Fix: custom loader with no SW, hide splash on `onEntrypointLoaded`, `--no-web-resources-cdn`. Check: `python3 tool/check_web_boot.py`.
+- 2026-09-06: Release **1.1.2+4** — users still saw a load screen. HTML first paint is now the landing (کھیلیں), not “لوڈ ہو رہا ہے”. `FutureBuilder` shows onboarding instead of a spinner. `tool/silence_sw.py` strips `client.navigate` from Flutter’s SW. Check: `python3 tool/check_web_boot.py`.
 
 ## Next Steps
 - [ ] Fix persistence properly: save guess units as JSON, restore guesses+evaluations in `loadSavedGame` (replaces clamp workaround).

@@ -1,0 +1,14 @@
+Urdu 5-letter word list derived from the CRULP word list.
+
+Attribution: Center for Research in Urdu Language Processing (www.crulp.org),
+National University of Computer and Emerging Sciences (www.nu.edu.pk), Pakistan.
+
+The source list may be used for commercial or non-commercial purposes.
+If altered or transformed, the resulting work must be distributed under a
+license identical to the original CRULP Creative Commons terms.
+Other users must be made clear of these licensing terms.
+
+Filter applied for Lafz: single-token words of exactly 5 Urdu graphemes,
+using the in-game keyboard alphabet (plus common hamza variants).
+Phrases with spaces were excluded. Three curated compounds from the
+previous Lafz list were kept: ہمراہ، ہمسفر، ہمراز.

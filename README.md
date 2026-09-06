@@ -6,12 +6,12 @@ Play: https://www.abdulaziz.au/lafz/
 
 GitHub: https://github.com/abdulazizsapra/lafz
 
-Current release: **1.1.0** — see [CHANGELOG.md](CHANGELOG.md).
+Current release: **1.1.1** — see [CHANGELOG.md](CHANGELOG.md).
 
 ## Web
 
 ```bash
-flutter build web --release --base-href /lafz/
+flutter build web --release --base-href /lafz/ --no-web-resources-cdn
 ```
 
 Pushing `main` deploys `build/web` via `.github/workflows/deploy-web.yml`.

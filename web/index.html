@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -22,13 +9,10 @@
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="روزانہ اردو لفظ کی پہیلی — پانچ حرف، پانچ کوششیں">
 
-  <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="لفظ">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <title>لفظ | روز کا اردو لفظ</title>
@@ -41,12 +25,15 @@
       background: #ffffff;
     }
     #lafz-boot {
-      min-height: 100%;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       color: #1a1a1b;
+      background: #ffffff;
       font-family: "Noto Naskh Arabic", "Geeza Pro", "Noto Nastaliq Urdu", serif;
       gap: 12px;
     }
@@ -60,19 +47,16 @@
     <span>لوڈ ہو رہا ہے…</span>
   </div>
   <script>
-    // Drop stale service workers / caches from earlier /lafz/ builds.
-    // A leftover worker is the usual reason this URL stays blank locally.
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function (regs) {
-        regs.forEach(function (reg) { reg.unregister(); });
-      });
-    }
-    if (window.caches) {
-      caches.keys().then(function (keys) {
-        keys.forEach(function (key) { caches.delete(key); });
-      });
-    }
+    {{flutter_js}}
+    {{flutter_build_config}}
+    _flutter.loader.load({
+      onEntrypointLoaded: async function (engineInitializer) {
+        const appRunner = await engineInitializer.initializeEngine();
+        const boot = document.getElementById('lafz-boot');
+        if (boot) boot.remove();
+        await appRunner.runApp();
+      }
+    });
   </script>
-  <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

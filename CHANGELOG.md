@@ -5,6 +5,14 @@ All notable changes to لفظ are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and version numbers follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] — 2026-09-06
+
+### Fixed
+- Stuck “لوڈ ہو رہا ہے…” splash: stop registering Flutter’s deprecated service worker (it reloaded the tab) and remove the splash when the engine starts.
+- Load CanvasKit from the same origin instead of gstatic.com.
+
+[1.1.1]: https://github.com/abdulazizsapra/lafz/releases/tag/v1.1.1
+
 ## [1.1.0] — 2026-09-06
 
 ### Added

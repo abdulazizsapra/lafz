@@ -17,6 +17,7 @@ class GameTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
     Color backgroundColor;
     Color borderColor;
     Color textColor;
@@ -39,48 +40,45 @@ class GameTile extends StatelessWidget {
         break;
       case TileState.filled:
         backgroundColor = Colors.transparent;
-        borderColor = AppColors.lightBorder;
-        textColor = AppColors.lightText;
+        borderColor = dark ? AppColors.darkFilledBorder : AppColors.lightFilledBorder;
+        textColor = dark ? AppColors.darkText : AppColors.lightText;
         break;
       case TileState.empty:
         backgroundColor = Colors.transparent;
-        borderColor = isCurrent ? AppColors.accent : AppColors.lightBorder;
-        textColor = AppColors.lightText;
+        borderColor = isCurrent
+            ? (dark ? AppColors.darkFilledBorder : AppColors.lightFilledBorder)
+            : (dark ? AppColors.darkBorder : AppColors.lightBorder);
+        textColor = dark ? AppColors.darkText : AppColors.lightText;
         break;
     }
 
-    // Adjust for dark theme
-    if (Theme.of(context).brightness == Brightness.dark) {
-      if (state == TileState.filled) {
-        borderColor = AppColors.darkBorder;
-        textColor = AppColors.darkText;
-      } else if (state == TileState.empty) {
-        borderColor = isCurrent ? AppColors.accent : AppColors.darkBorder;
-        textColor = AppColors.darkText;
-      }
-    }
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      width: MediaQuery.of(context).size.width * 0.15,
-      height: MediaQuery.of(context).size.width * 0.15,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        border: Border.all(color: borderColor, width: 2),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Center(
-        child: Text(
-          letter,
-          style: TextStyle(
-            fontSize: MediaQuery.of(context).size.width * 0.06,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-            fontFamily: AppTypography.urduFontFamily,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final side = constraints.maxWidth.isFinite && constraints.maxWidth > 0
+            ? constraints.maxWidth
+            : 62.0;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          width: side,
+          height: side,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            border: Border.all(color: borderColor, width: 2),
           ),
-        ),
-      ),
+          child: Center(
+            child: Text(
+              letter,
+              style: TextStyle(
+                fontSize: (side * 0.48).clamp(18.0, 34.0),
+                fontWeight: FontWeight.w800,
+                color: textColor,
+                fontFamily: AppTypography.urduFontFamily,
+                height: 1,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
-
 }

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:lafz/core/utils/lafz_kv.dart';
 
 class Statistics {
   final int gamesPlayed;
@@ -32,7 +32,11 @@ class Statistics {
       gamesWon: json['gamesWon'] ?? 0,
       currentStreak: json['currentStreak'] ?? 0,
       maxStreak: json['maxStreak'] ?? 0,
-      guessDistribution: Map<int, int>.from(json['guessDistribution'] ?? {}),
+      guessDistribution: {
+        for (final entry
+            in (json['guessDistribution'] as Map? ?? {}).entries)
+          int.parse(entry.key.toString()): (entry.value as num).toInt(),
+      },
     );
   }
 
@@ -57,8 +61,7 @@ class StatisticsRepository {
   static const String _key = 'lafz_stats';
 
   Future<Statistics> getStats() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString(_key);
+    final data = await LafzKv.getString(_key);
     if (data == null) return Statistics();
     try {
       return Statistics.fromJson(jsonDecode(data));
@@ -68,7 +71,6 @@ class StatisticsRepository {
   }
 
   Future<void> saveStats(Statistics stats) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_key, jsonEncode(stats.toJson()));
+    await LafzKv.setString(_key, jsonEncode(stats.toJson()));
   }
 }

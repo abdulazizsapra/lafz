@@ -6,6 +6,8 @@ Play: https://www.abdulaziz.au/lafz/
 
 GitHub: https://github.com/abdulazizsapra/lafz
 
+Current release: **1.1.0** — see [CHANGELOG.md](CHANGELOG.md).
+
 ## Web
 
 ```bash
@@ -15,10 +17,12 @@ flutter build web --release --base-href /lafz/
 Pushing `main` deploys `build/web` via `.github/workflows/deploy-web.yml`.
 The site URL is `/lafz/` because this is a project Pages site, not the profile root.
 
-Local preview:
+Local preview (serves `/lafz/` on port 8081):
 
 ```bash
-python3 -m http.server 8080 -d build/web
+flutter build web --release --base-href /lafz/
+mkdir -p build/pages/lafz && rsync -a --delete build/web/ build/pages/lafz/
+python3 tool/serve_local.py
 ```
 
 ## Words

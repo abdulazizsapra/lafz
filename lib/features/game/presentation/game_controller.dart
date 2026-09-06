@@ -5,6 +5,7 @@ import 'package:lafz/shared/models/urdu_word_models.dart';
 import 'package:lafz/features/game/domain/game_engine.dart';
 import 'package:lafz/features/statistics/data/statistics_repository.dart';
 import 'package:lafz/core/utils/game_persistence.dart';
+import 'package:lafz/features/game/data/saved_game.dart';
 
 class HintResult {
   final int position; // 0-based index into the target word
@@ -94,18 +95,62 @@ class GameController {
 
   Future<void> loadSavedGame() async {
     final saved = await _persistence.loadGame();
-    if (saved == null) return;
+    if (saved == null || saved.puzzleId != _state.puzzle.id) return;
 
-    // TODO: persist/restore guess units properly (currently saved as
-    // toString, unparseable). Until then, never restore a currentRow
-    // beyond the guesses actually in memory - otherwise the grid
-    // indexes empty lists and throws RangeError on startup.
-    final savedRow = saved['currentRow'] as int? ?? 0;
-    final safeRow = savedRow.clamp(0, _state.guesses.length);
+    final target = UrduWord(
+      original: _state.puzzle.word,
+      units: _engine.tokenizer.tokenize(_state.puzzle.word, _engine.normalizer),
+    );
+
+    final guesses = <List<UrduUnit>>[];
+    final evaluations = <GuessEvaluation>[];
+    for (final row in saved.guesses) {
+      final guess = UrduWord(
+        original: row.join(),
+        units: row
+            .map(
+              (letter) => _engine.tokenizer
+                  .tokenize(letter, _engine.normalizer)
+                  .first,
+            )
+            .toList(),
+      );
+      if (guess.length != target.length) continue;
+      guesses.add(guess.units);
+      evaluations.add(_engine.evaluateGuess(target, guess));
+    }
+
+    final isWon = evaluations.isNotEmpty && evaluations.last.isCorrect;
+    final isGameOver = isWon || guesses.length >= maxAttempts;
+
     _state = _state.copyWith(
-      currentRow: safeRow,
+      guesses: guesses,
+      evaluations: evaluations,
+      currentRow: guesses.length,
+      isGameOver: isGameOver,
+      isWon: isWon,
+      hintsLeft: saved.hintsLeft,
+      hintedPositions: saved.hintedPositions,
     );
     stateNotifier.value = _state;
+  }
+
+  Future<void> _persist() async {
+    if (_state.isGameOver) {
+      await _persistence.clearGame();
+      return;
+    }
+    await _persistence.saveGame(
+      SavedGame(
+        puzzleId: _state.puzzle.id,
+        guesses: _state.guesses
+            .map((row) => row.map((u) => u.display).toList())
+            .toList(),
+        currentRow: _state.currentRow,
+        hintsLeft: _state.hintsLeft,
+        hintedPositions: _state.hintedPositions,
+      ),
+    );
   }
 
   /// Reveals the leftmost not-yet-hinted target letter. Returns null
@@ -131,6 +176,7 @@ class GameController {
       hintedPositions: [..._state.hintedPositions, pos],
     );
     stateNotifier.value = _state;
+    _persist();
 
     return HintResult(
       position: pos,
@@ -169,16 +215,10 @@ class GameController {
     
     stateNotifier.value = _state;
 
-    // Persistence: Save current progress
-    await _persistence.saveGame(
-      _state.puzzle, 
-      newGuesses.map((g) => g.map((u) => u.display).toList()).toList(), 
-      _state.currentRow
-    );
+    await _persist();
 
     if (isGameOver) {
       await _updateStatistics(isWon, evaluation.states.length);
-      await _persistence.clearGame();
     }
   }
 

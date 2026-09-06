@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app/app_config.dart';
 import 'app/theme/app_theme.dart';
+import 'core/utils/lafz_kv.dart';
 import 'features/game/presentation/game_screen.dart';
 import 'features/onboarding/presentation/onboarding_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'shared/widgets/play_window.dart';
 
 Future<bool> _seenOnboarding() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('lafz_onboarding_seen') ?? false;
+  return await LafzKv.getBool('lafz_onboarding_seen') ?? false;
 }
 
 void main() {
@@ -25,7 +25,7 @@ class LafzApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       locale: const Locale('ur', 'PK'),
       supportedLocales: const [
         Locale('ur', 'PK'),
@@ -36,6 +36,7 @@ class LafzApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      builder: (context, child) => PlayWindow(child: child ?? const SizedBox.shrink()),
       home: FutureBuilder<bool>(
         future: _seenOnboarding(),
         builder: (context, snapshot) {

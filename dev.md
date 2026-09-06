@@ -27,6 +27,10 @@ Urdu Wordle game (Flutter). Single daily puzzle, 5 attempts, 5x5 grid, custom Ur
 - 2026-09-06: Replaced bundled list with 26,830 five-letter Urdu words filtered from CRULP/NUCES `wordlist.txt` (UTF-16; skip phrases; keyboard alphabet + hamza variants; keep ہمراہ/ہمسفر/ہمراز). Credit in `assets/words/NOTICE.txt`.
 - 2026-09-06: GitHub Pages project site at `/lafz/` (`flutter build web --release --base-href /lafz/`). Workflow `.github/workflows/deploy-web.yml` builds on `main` and deploys via `actions/deploy-pages`. Live URL uses profile domain: https://www.abdulaziz.au/lafz/
 - 2026-09-06: Bundled Noto Naskh Arabic (OFL) so Flutter web/CanvasKit can render Urdu. Theme + `GameTile` use `Noto Naskh Arabic` instead of missing Jameel Noori Nastaleeq.
+- 2026-09-06: Play window — desktop/tablet clamps to 420×840 centered device frame (`PlayWindow` via `MaterialApp.builder`); phones stay full-bleed. Keyboard uses 44px keys + Urdu enter/backspace; tiles size from the grid cell.
+- 2026-09-06: Progress cookies — `lafz_game`, `lafz_onboarding_seen`, `lafz_stats` written as cookies (plus SharedPreferences fallback). JSON restore of guesses/evals/hints; ignore save if puzzle id is a different day.
+- 2026-09-06: Win/lose result dialog shows the word plus Wiktionary Urdu gloss (`WordMeaning.fromWiktionaryJson`, prefer `ur` key, strip HTML). Fetch is CORS-open REST `page/definition/{word}`. Missing entries show "معنی دستیاب نہیں".
+- 2026-09-06: Local preview — `tool/serve_local.py` on :8081 (`/lafz/`, no-store for html/js, `/` → `/lafz/`). `web/index.html` has a boot splash so a slow CanvasKit load is not a black page. Play window fills viewport height (480px wide) instead of a 420×840 postage stamp.
 
 ## Current Status
 - `flutter analyze` on touched files: clean (1 unused import, 1 unused var, 1 async-context info remain).
@@ -34,10 +38,15 @@ Urdu Wordle game (Flutter). Single daily puzzle, 5 attempts, 5x5 grid, custom Ur
 - Fresh `flutter run -d 00008150-001575680CF8401C` installed + launched; run log has 0 RangeError/EXCEPTION lines, VM/DevTools service up. Grid renders 5 columns matching mock word; typing fills only the active row; keyboard keys color by guess history (grey/yellow/green).
 - Killed stale duplicate `flutter run` sessions (old 12:26 + stuck 12:32) that blocked reinstall.
 
+- 2026-09-06: Wordle-like UI — flat 500px play window (no phone frame), `WordleHeader`, square 0-radius tiles, Wordle green/yellow/gray + gray keyboard, light theme, landing page (`#E3E3E3`, 3×3 logo, black **کھیلیں** pill). Game stays 5×5. Verified locally at http://127.0.0.1:8081/lafz/.
+- 2026-09-06: Release **1.1.0+2** — `layoutGame` splits leftover height between board and keyboard so short phones and landscape do not overflow. Viewport meta + `100dvh`. Semver + CHANGELOG + git tags (`v1.0.0` first public, `v1.1.0` this UX release).
+
 ## Next Steps
 - [ ] Fix persistence properly: save guess units as JSON, restore guesses+evaluations in `loadSavedGame` (replaces clamp workaround).
 - [ ] Remove unused import (`game_engine.dart`) and unused `screenWidth`; guard `context` after `await` in `_openStats`.
 - [x] Replace mock puzzle with real daily-puzzle loading (bundled list).
 - [x] Repo https://github.com/abdulazizsapra/lafz pushed; Pages source = GitHub Actions. Public URL: https://www.abdulaziz.au/lafz/ (profile custom domain).
+- [x] Restyle game + landing to match Wordle chrome (keep لفظ branding, 5 attempts).
 - [ ] Confirm game-over/keyboard layout + tile colors on device.
 - [ ] Release build (`flutter build ios --release`) when ready for TestFlight.
+- [ ] Push Wordle UI to GitHub Pages when ready.

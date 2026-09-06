@@ -3,10 +3,10 @@
     "short_name": "لفظ",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#121213",
-    "theme_color": "#6AAA64",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
     "description": "روزانہ اردو لفظ کی پہیلی — پانچ حرف، پانچ کوششیں",
-    "orientation": "portrait-primary",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

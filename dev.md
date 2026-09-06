@@ -25,7 +25,8 @@ Urdu Wordle game (Flutter). Single daily puzzle, 5 attempts, 5x5 grid, custom Ur
 
 - 2026-09-04: Web/PWA — branded `web/manifest.json` + `index.html` (لفظ name, Urdu description, green theme), `flutter build web --release` OK, served at http://localhost:8080 via `python3 -m http.server 8080 -d build/web` (note: flag is `-d`, not `--directory`). Installable as PWA from localhost (service worker + icons + manifest all 200).
 - 2026-09-06: Replaced bundled list with 26,830 five-letter Urdu words filtered from CRULP/NUCES `wordlist.txt` (UTF-16; skip phrases; keyboard alphabet + hamza variants; keep ہمراہ/ہمسفر/ہمراز). Credit in `assets/words/NOTICE.txt`.
-- 2026-09-06: GitHub Pages project site at `/lafz/` (`flutter build web --release --base-href /lafz/`). Workflow `.github/workflows/deploy-web.yml` builds on `main` and deploys via `actions/deploy-pages`. Intended URL: https://abdulazizsapra.github.io/lafz/
+- 2026-09-06: GitHub Pages project site at `/lafz/` (`flutter build web --release --base-href /lafz/`). Workflow `.github/workflows/deploy-web.yml` builds on `main` and deploys via `actions/deploy-pages`. Live URL uses profile domain: https://www.abdulaziz.au/lafz/
+- 2026-09-06: Bundled Noto Naskh Arabic (OFL) so Flutter web/CanvasKit can render Urdu. Theme + `GameTile` use `Noto Naskh Arabic` instead of missing Jameel Noori Nastaleeq.
 
 ## Current Status
 - `flutter analyze` on touched files: clean (1 unused import, 1 unused var, 1 async-context info remain).

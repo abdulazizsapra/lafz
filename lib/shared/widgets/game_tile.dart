@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lafz/app/theme/app_colors.dart';
+import 'package:lafz/app/typography.dart';
 import 'package:lafz/shared/models/game_models.dart';
 
 class GameTile extends StatelessWidget {
@@ -75,7 +76,7 @@ class GameTile extends StatelessWidget {
             fontSize: MediaQuery.of(context).size.width * 0.06,
             fontWeight: FontWeight.bold,
             color: textColor,
-            fontFamily: 'Jameel Noori Nastaleeq',
+            fontFamily: AppTypography.urduFontFamily,
           ),
         ),
       ),

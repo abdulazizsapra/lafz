@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lafz/app/typography.dart';
 import 'app_colors.dart';
 
 class AppTheme {
   static ThemeData get lightTheme => ThemeData(
     brightness: Brightness.light,
+    fontFamily: AppTypography.urduFontFamily,
     scaffoldBackgroundColor: AppColors.lightBackground,
     primaryColor: AppColors.accent,
     dividerColor: AppColors.lightBorder,
@@ -15,6 +17,7 @@ class AppTheme {
 
   static ThemeData get darkTheme => ThemeData(
     brightness: Brightness.dark,
+    fontFamily: AppTypography.urduFontFamily,
     scaffoldBackgroundColor: AppColors.darkBackground,
     primaryColor: AppColors.accent,
     dividerColor: AppColors.darkBorder,

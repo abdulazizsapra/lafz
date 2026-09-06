@@ -27,3 +27,9 @@ flutter:
   assets:
     - assets/app_icons/
     - assets/words/
+  fonts:
+    - family: Noto Naskh Arabic
+      fonts:
+        - asset: assets/fonts/NotoNaskhArabic-Regular.ttf
+        - asset: assets/fonts/NotoNaskhArabic-Bold.ttf
+          weight: 700

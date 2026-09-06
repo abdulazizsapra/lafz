@@ -5,6 +5,13 @@ All notable changes to لفظ are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and version numbers follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.3] — 2026-09-06
+
+### Added
+- Lafz favicon (Wordle-style 3×3 tiles) as `favicon.ico` / `favicon.png`, plus matching PWA icons.
+
+[1.1.3]: https://github.com/abdulazizsapra/lafz/releases/tag/v1.1.3
+
 ## [1.1.2] — 2026-09-06
 
 ### Fixed

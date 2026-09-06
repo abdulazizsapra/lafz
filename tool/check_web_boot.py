@@ -23,6 +23,10 @@ if '"useLocalCanvasKit":true' not in html:
     errors.append("CanvasKit is not pinned to the same origin")
 if "client.navigate" in sw:
     errors.append("service worker still reloads clients")
+if not (root / "build" / "web" / "favicon.ico").exists():
+    errors.append("favicon.ico is missing from the web build")
+if "favicon.ico" not in html:
+    errors.append("index.html does not link favicon.ico")
 
 if errors:
     print("RED — web boot is unsafe:")

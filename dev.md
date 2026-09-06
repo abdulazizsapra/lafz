@@ -40,6 +40,7 @@ Urdu Wordle game (Flutter). Single daily puzzle, 5 attempts, 5x5 grid, custom Ur
 
 - 2026-09-06: Wordle-like UI — flat 500px play window (no phone frame), `WordleHeader`, square 0-radius tiles, Wordle green/yellow/gray + gray keyboard, light theme, landing page (`#E3E3E3`, 3×3 logo, black **کھیلیں** pill). Game stays 5×5. Verified locally at http://127.0.0.1:8081/lafz/.
 - 2026-09-06: Release **1.1.3+5** — branded favicon (3×3 Wordle tiles) replaces the Flutter bird. `tool/make_favicon.py` writes `web/favicon.ico`, `favicon.png`, and `web/icons`.
+- 2026-09-06: Release **1.1.4+6** — guesses must be in the bundled list or the row is not consumed (snackbar: یہ لفظ فہرست میں نہیں). Header refresh + result **نیا لفظ** start a random practice word via `startNewPuzzle` / `randomPuzzleFrom`; mid-game reset does not count as a loss.
 
 ## Next Steps
 - [ ] Fix persistence properly: save guess units as JSON, restore guesses+evaluations in `loadSavedGame` (replaces clamp workaround).

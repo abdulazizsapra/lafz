@@ -30,7 +30,7 @@ class HelpScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'پانچ حرفی لفظ لکھ کر جمع کریں دبائیں۔ رنگ بتائیں گے آپ کتنے قریب ہیں:',
+                        'پانچ حرفی لفظ لکھ کر جمع کریں دبائیں۔ صرف فہرست کے الفاظ قبول ہوں گے۔ رنگ بتائیں گے آپ کتنے قریب ہیں:',
                         style: TextStyle(fontSize: 17, height: 1.5),
                       ),
                       SizedBox(height: 28),

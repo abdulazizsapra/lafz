@@ -43,9 +43,10 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _loadPuzzle() async {
     try {
+      final words = await _words.loadBundledWords();
       final puzzle = await _words.getTodayPuzzle();
       if (!mounted) return;
-      final controller = GameController(puzzle);
+      final controller = GameController(puzzle, validWords: words);
       await controller.loadSavedGame();
       if (!mounted) return;
       setState(() => _controller = controller);
@@ -58,7 +59,12 @@ class _GameScreenState extends State<GameScreen> {
         word: 'زندگی',
         wordLength: 5,
       );
-      setState(() => _controller = GameController(fallback));
+      setState(
+        () => _controller = GameController(
+          fallback,
+          validWords: const ['زندگی'],
+        ),
+      );
     }
   }
 
@@ -87,15 +93,55 @@ class _GameScreenState extends State<GameScreen> {
         original: _currentGuess,
         units: _tokenizer.tokenize(_currentGuess, _normalizer),
       );
-      setState(() => _currentGuess = '');
-      await _c.submitGuess(guessWord);
+      final result = await _c.submitGuess(guessWord);
       if (!mounted) return;
-      setState(() {});
+      if (result == GuessSubmitResult.notInWordList) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('یہ لفظ فہرست میں نہیں')),
+        );
+        return;
+      }
+      setState(() => _currentGuess = '');
       if (_c.state.isGameOver) {
         _meaningFuture ??= _meanings.lookup(_c.state.puzzle.word);
         _showResultDialog();
       }
     }
+  }
+
+  Future<void> _confirmReset() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('نیا لفظ؟'),
+        content: const Text('موجودہ بورڈ صاف ہو کر ایک نیا لفظ آئے گا۔'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('منسوخ'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('ہاں'),
+          ),
+        ],
+      ),
+    );
+    if (ok == true) await _resetWithNewWord();
+  }
+
+  Future<void> _resetWithNewWord() async {
+    final words = await _words.loadBundledWords();
+    final next = _words.randomPuzzleFrom(
+      words,
+      excludeWord: _c.state.puzzle.word,
+    );
+    await _c.startNewPuzzle(next);
+    if (!mounted) return;
+    setState(() {
+      _currentGuess = '';
+      _meaningFuture = null;
+    });
   }
 
   void _useHint() {
@@ -125,6 +171,10 @@ class _GameScreenState extends State<GameScreen> {
         onShare: () {
           Navigator.pop(context);
           _shareResult();
+        },
+        onNewWord: () {
+          Navigator.pop(context);
+          _resetWithNewWord();
         },
         onClose: () => Navigator.pop(context),
       ),
@@ -245,6 +295,11 @@ class _GameScreenState extends State<GameScreen> {
                   icon: const Icon(Icons.bar_chart),
                   tooltip: 'اعداد و شمار',
                   onPressed: _openStats,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  tooltip: 'نیا لفظ',
+                  onPressed: _confirmReset,
                 ),
               ],
             ),

@@ -5,6 +5,14 @@ All notable changes to لفظ are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and version numbers follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.4] — 2026-09-06
+
+### Added
+- Guess must be in the word list or the row is not consumed.
+- Reset / **نیا لفظ** starts a new random practice word without counting a mid-game loss.
+
+[1.1.4]: https://github.com/abdulazizsapra/lafz/releases/tag/v1.1.4
+
 ## [1.1.3] — 2026-09-06
 
 ### Added

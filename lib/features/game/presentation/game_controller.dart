@@ -62,11 +62,18 @@ class GameState {
   }
 }
 
+enum GuessSubmitResult {
+  accepted,
+  notInWordList,
+  ignored,
+}
+
 class GameController {
   final GameEngine _engine = GameEngine();
   final StatisticsRepository _statsRepo = StatisticsRepository();
   final GamePersistenceService _persistence = GamePersistenceService();
   final int maxAttempts = 5;
+  final Set<String> _validKeys;
 
   GameState _state;
   final ValueNotifier<GameState> stateNotifier = ValueNotifier(
@@ -80,18 +87,49 @@ class GameController {
     )
   );
 
-  GameController(Puzzle puzzle) : _state = GameState(
-    puzzle: puzzle,
-    guesses: [],
-    evaluations: [],
-    currentRow: 0,
-    isGameOver: false,
-    isWon: false,
-  ) {
+  GameController(Puzzle puzzle, {Iterable<String> validWords = const []})
+      : _validKeys = {},
+        _state = GameState(
+          puzzle: puzzle,
+          guesses: [],
+          evaluations: [],
+          currentRow: 0,
+          isGameOver: false,
+          isWon: false,
+        ) {
+    for (final word in validWords) {
+      _validKeys.add(_keyFor(word));
+    }
     stateNotifier.value = _state;
   }
 
+  String _keyFor(String text) {
+    return text.characters
+        .map((g) => _engine.normalizer.toComparisonKey(_engine.normalizer.normalize(g)))
+        .join();
+  }
+
+  bool _isKnownWord(UrduWord guess) {
+    if (_validKeys.isEmpty) return true;
+    return _validKeys.contains(
+      guess.units.map((u) => u.comparisonKey).join(),
+    );
+  }
+
   GameState get state => _state;
+
+  Future<void> startNewPuzzle(Puzzle puzzle) async {
+    await _persistence.clearGame();
+    _state = GameState(
+      puzzle: puzzle,
+      guesses: [],
+      evaluations: [],
+      currentRow: 0,
+      isGameOver: false,
+      isWon: false,
+    );
+    stateNotifier.value = _state;
+  }
 
   Future<void> loadSavedGame() async {
     final saved = await _persistence.loadGame();
@@ -185,8 +223,9 @@ class GameController {
     );
   }
 
-  Future<void> submitGuess(UrduWord guess) async {
-    if (_state.isGameOver) return;
+  Future<GuessSubmitResult> submitGuess(UrduWord guess) async {
+    if (_state.isGameOver) return GuessSubmitResult.ignored;
+    if (!_isKnownWord(guess)) return GuessSubmitResult.notInWordList;
 
     final target = UrduWord(
       original: _state.puzzle.word,
@@ -220,6 +259,7 @@ class GameController {
     if (isGameOver) {
       await _updateStatistics(isWon, evaluation.states.length);
     }
+    return GuessSubmitResult.accepted;
   }
 
   Future<void> _updateStatistics(bool won, int attempts) async {

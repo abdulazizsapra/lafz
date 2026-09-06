@@ -11,6 +11,7 @@ class ResultDialog extends StatelessWidget {
   final Future<WordMeaning?>? meaningFuture;
   final VoidCallback onShare;
   final VoidCallback onClose;
+  final VoidCallback? onNewWord;
 
   const ResultDialog({
     super.key,
@@ -19,6 +20,7 @@ class ResultDialog extends StatelessWidget {
     required this.attempts,
     required this.onShare,
     required this.onClose,
+    this.onNewWord,
     this.meaning,
     this.meaningFuture,
   });
@@ -38,7 +40,7 @@ class ResultDialog extends StatelessWidget {
           Text(
             isWon
                 ? 'آپ نے $attempts کوششوں میں یہ لفظ حل کر لیا'
-                : 'آج کا لفظ تھا',
+                : 'لفظ تھا',
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 16),
           ),
@@ -95,6 +97,8 @@ class ResultDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(onPressed: onClose, child: const Text('بند کریں')),
+        if (onNewWord != null)
+          TextButton(onPressed: onNewWord, child: const Text('نیا لفظ')),
         if (isWon)
           ElevatedButton(onPressed: onShare, child: const Text('شیئر کریں')),
       ],

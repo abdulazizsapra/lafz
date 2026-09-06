@@ -22,4 +22,23 @@ void main() {
     expect(find.text('معنی'), findsOneWidget);
     expect(find.text('Noun — life؛ lifetime'), findsOneWidget);
   });
+
+  testWidgets('result dialog can start a new word', (tester) async {
+    var requested = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ResultDialog(
+          isWon: false,
+          targetWord: 'زندگی',
+          attempts: 5,
+          onShare: () {},
+          onClose: () {},
+          onNewWord: () => requested = true,
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('نیا لفظ'));
+    expect(requested, isTrue);
+  });
 }

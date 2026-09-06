@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:characters/characters.dart';
 import 'package:flutter/services.dart';
@@ -71,6 +72,26 @@ class WordRepository {
     } catch (_) {
       return null;
     }
+  }
+
+  /// A random practice word, never the excluded one when another exists.
+  Puzzle randomPuzzleFrom(
+    List<String> words, {
+    String? excludeWord,
+    int? seed,
+  }) {
+    final candidates = excludeWord == null
+        ? words
+        : words.where((w) => w != excludeWord).toList();
+    final pool = candidates.isEmpty ? words : candidates;
+    final rng = seed == null ? Random() : Random(seed);
+    final word = pool[rng.nextInt(pool.length)];
+    return Puzzle(
+      id: 'practice-$word',
+      date: DateTime.now(),
+      word: word,
+      wordLength: word.characters.length,
+    );
   }
 
   /// Today's puzzle: remote first, bundled daily pick as fallback.
